@@ -4,16 +4,7 @@ import ListaSuspensa from "../ListaSuspensa";
 import Botao from "../Botao/Index";
 import { useState } from "react";
 const Formulario = (props) => {
-  const times = [
-    "Programação",
-    "Front-End",
-    "Data-Science",
-    "Back-End",
-    "DevOps",
-    "Ux e Design",
-    "Mobile",
-  ];
-
+ 
   const [nome, setNome] = useState("")
   const [cargo, setCargo] = useState("")
   const [imagem, setImagem] = useState("")
@@ -21,7 +12,11 @@ const Formulario = (props) => {
 
   const aoSalvar = (evento) => {
     evento.preventDefault();
-    props.aoColaboradorCadastrado({ nome, cargo, imagem, time });
+    props.aoColaboradorCadastrado({ nome, cargo, imagem, time })
+    setNome('')
+    setCargo('')
+    setImagem('')
+    setTime('');
   };
   return (
     <section className="formulario">
@@ -52,7 +47,7 @@ const Formulario = (props) => {
         ></CampoTexto>
         <ListaSuspensa 
         label="Time" 
-        itens={times} 
+        itens={props.times} 
         obrigatorio={true}
         valor = {time}
         aoAlterado={valor => setTime(valor)}
