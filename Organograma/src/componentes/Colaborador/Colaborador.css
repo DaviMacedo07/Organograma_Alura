@@ -1,3 +1,10 @@
+.colaborador img {
+    width: 100px; /* Defina o tamanho desejado */
+    height: 100px; /* Defina o mesmo valor que a largura */
+    border-radius: 50%;
+    object-fit: cover; /* Para garantir que a imagem cubra o espaço sem distorcer */
+  }
+
 .colaborador {
     width: 280px;
 }

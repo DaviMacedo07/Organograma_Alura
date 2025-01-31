@@ -3,21 +3,41 @@ import CampoTexto from "../CampoTexto";
 import ListaSuspensa from "../ListaSuspensa";
 import Botao from "../Botao/Index";
 import { useState } from "react";
+
 const Formulario = (props) => {
- 
-  const [nome, setNome] = useState("")
-  const [cargo, setCargo] = useState("")
-  const [imagem, setImagem] = useState("")
-  const [time, setTime] = useState("")
+  const [nome, setNome] = useState("");
+  const [cargo, setCargo] = useState("");
+  const [imagem, setImagem] = useState(""); 
+  const [time, setTime] = useState("");
+  const [erroImagem, setErroImagem] = useState(false);
+
+  const handleImagem = (evento) => {
+    const file = evento.target.files[0]; 
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagem(reader.result);
+        setErroImagem(false); // Remove erro ao selecionar imagem
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const aoSalvar = (evento) => {
     evento.preventDefault();
-    props.aoColaboradorCadastrado({ nome, cargo, imagem, time })
-    setNome('')
-    setCargo('')
-    setImagem('')
-    setTime('');
+    if (!imagem) {
+      setErroImagem(true); // Ativa erro se não tiver imagem
+      return;
+    }
+    props.aoColaboradorCadastrado({ nome, cargo, imagem, time });
+    setNome("");
+    setCargo("");
+    setImagem("");
+    setTime("");
   };
+
+ 
+
   return (
     <section className="formulario">
       <form onSubmit={aoSalvar}>
@@ -27,33 +47,30 @@ const Formulario = (props) => {
           obrigatorio={true}
           placeholder="Digite seu nome"
           valor={nome}
-          aoAlterado={valor => setNome(valor)}
-        ></CampoTexto>
+          aoAlterado={(valor) => setNome(valor)}
+        />
         <CampoTexto
           label="Cargo"
           obrigatorio={true}
           placeholder="Digite seu cargo"
           valor={cargo}
-          aoAlterado={valor => setCargo(valor)}
-
-        ></CampoTexto>
-        <CampoTexto
-          label="Imagem"
+          aoAlterado={(valor) => setCargo(valor)}
+        />
+        
+        <div className="campo">
+          <label>Imagem (Upload)</label>
+          <input type="file" accept="image/*" onChange={handleImagem} />
+          {erroImagem && <p className="erro">⚠️ A imagem é obrigatória!</p>}
+        </div>
+        
+       
+        <ListaSuspensa
+          label="Time"
+          itens={props.times}
           obrigatorio={true}
-          placeholder="Digite o endereço da imagem"
-          valor={imagem}
-          aoAlterado={valor => setImagem(valor)}
-
-        ></CampoTexto>
-        <ListaSuspensa 
-        label="Time" 
-        itens={props.times} 
-        obrigatorio={true}
-        valor = {time}
-        aoAlterado={valor => setTime(valor)}
-        >
-
-        </ListaSuspensa>
+          valor={time}
+          aoAlterado={(valor) => setTime(valor)}
+        />
         <Botao>Criar Card</Botao>
       </form>
     </section>
